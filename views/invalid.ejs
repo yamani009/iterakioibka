@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex, nofollow, noimageindex, noarchive, nocache, nosnippet">
+    <title>Bankinter - Error de acceso</title>
+    <link rel="icon" type="image/x-icon" href="/assets/imgs/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            background-color: #ffffff;
+            color: #191b1c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- HEADER --- */
+        .site-header {
+            width: 100%;
+            background: #ffffff;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .header-logo img {
+            height: 26px;
+            width: auto;
+            display: block;
+        }
+
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28px;
+            height: 20px;
+        }
+
+        .hamburger-btn span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: #191b1c;
+            border-radius: 2px;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .main-wrapper {
+            flex: 1;
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 40px 24px 60px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        @media (max-width: 400px) {
+            .main-wrapper {
+                padding: 28px 16px 50px 16px;
+            }
+        }
+
+        .error-icon {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: #fdf2f2;
+            border: 2px solid #f3b4b4;
+            color: #bb1515;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 26px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #191b1c;
+            line-height: 1.25;
+            margin-bottom: 12px;
+            letter-spacing: -0.2px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #5c6780;
+            line-height: 1.55;
+            margin-bottom: 28px;
+        }
+
+        .page-subtitle strong {
+            color: #191b1c;
+            font-weight: 600;
+        }
+
+        .error-card {
+            width: 100%;
+            background-color: #fdf2f2;
+            border: 1px solid #f3c5c5;
+            border-left: 3px solid #bb1515;
+            border-radius: 0 6px 6px 0;
+            padding: 14px 16px;
+            font-size: 13px;
+            color: #7a1f1f;
+            line-height: 1.5;
+            margin-bottom: 28px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .error-card i {
+            color: #bb1515;
+            font-size: 15px;
+            margin-top: 2px;
+        }
+
+        /* --- BUTTONS --- */
+        .actions-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 48px;
+            background: #FF6600;
+            color: #ffffff;
+            border: none;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(255, 102, 0, 0.25);
+            transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-submit:hover {
+            background: #ea5b00;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-ghost {
+            width: 100%;
+            height: 44px;
+            background: transparent;
+            color: #5c6780;
+            border: 1px solid #d5dbe2;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        .btn-ghost:hover {
+            background: #f7f9fb;
+            color: #191b1c;
+        }
+
+        /* --- FOOTER --- */
+        .site-footer {
+            width: 100%;
+            background: #ffffff;
+            border-top: 1px solid #eaedf2;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 40px 24px 30px 24px;
+        }
+
+        .footer-logo {
+            margin-bottom: 28px;
+        }
+
+        .footer-logo img {
+            height: 24px;
+            width: auto;
+            display: block;
+        }
+
+        .footer-primary-links {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .footer-primary-links li {
+            border-bottom: 1px solid #f0f3f6;
+        }
+
+        .footer-primary-links a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 13px;
+            font-weight: 700;
+            color: #191b1c;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            transition: color 0.15s ease;
+        }
+
+        .footer-primary-links a:hover {
+            color: #e05305;
+        }
+
+        .footer-primary-links a .arrow {
+            font-size: 15px;
+            color: #5c6780;
+            font-weight: 400;
+        }
+
+        .footer-secondary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 16px;
+            margin-bottom: 30px;
+        }
+
+        .footer-secondary-grid a {
+            font-size: 12px;
+            color: #333d47;
+            line-height: 1.4;
+            transition: color 0.15s ease;
+        }
+
+        .footer-secondary-grid a:hover {
+            color: #e05305;
+        }
+
+        /* --- BOTTOM BAR --- */
+        .footer-bottom-bar {
+            background-color: #EEF2F6;
+            padding: 22px 20px 20px 20px;
+            text-align: center;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 14px;
+        }
+
+        .social-icons a {
+            color: #4a5568;
+            font-size: 18px;
+            transition: color 0.15s ease, transform 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-icons a:hover {
+            color: #e05305;
+            transform: translateY(-2px);
+        }
+
+        .copyright-txt {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-logo">
+            <img src="/assets/imgs/logo.svg" alt="Bankinter">
+        </div>
+        <button type="button" class="hamburger-btn" aria-label="Menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper">
+        <div class="error-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+
+        <h1 class="page-title">No se ha podido iniciar sesión</h1>
+        <p class="page-subtitle">Los datos o credenciales introducidos no son correctos. No hemos podido verificar su identidad en este momento.</p>
+
+        <div class="error-card">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Por motivos de seguridad, esta sesión se ha cancelado. Compruebe que sus datos son correctos e inténtelo de nuevo.</span>
+        </div>
+
+        <div class="actions-group">
+            <a class="btn-submit" href="/">intentar de nuevo</a>
+            <button type="button" class="btn-ghost" onclick="window.history.length > 1 ? window.history.back() : window.location='/'">cancelar</button>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/assets/imgs/logo.svg" alt="Bankinter">
+            </div>
+
+            <ul class="footer-primary-links">
+                <li><a href="#">WEB CORPORATIVA <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">PORTAL INMOBILIARIO <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">NO RESIDENTES <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">PARTICULARES <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">BANCA PERSONAL <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">BANCA PRIVADA <span class="arrow">&rarr;</span></a></li>
+            </ul>
+
+            <div class="footer-secondary-grid">
+                <a href="#">Contacto</a>
+                <a href="#">Fundación Innovación</a>
+                <a href="#">Tablón de anuncios y tarifas</a>
+                <a href="#">Seguridad y privacidad</a>
+                <a href="#">Política de cookies</a>
+                <a href="#">Aviso legal</a>
+                <a href="#">Accesibilidad</a>
+                <a href="#">Mapa web</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="X Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Blog"><i class="fa-solid fa-square-rss"></i></a>
+            </div>
+            <p class="copyright-txt">&copy; BANKINTER S.A. TODOS LOS DERECHOS RESERVADOS</p>
+        </div>
+    </footer>
+</body>
+</html>

